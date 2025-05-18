@@ -1,0 +1,11 @@
+# Dockerfile for Custom Jenkins Agent
+FROM jenkins/inbound-agent:alpine
+
+# Switch to root to install packages
+USER root
+
+# Install required tools
+RUN apk add --no-cache curl git bash
+
+# Switch back to Jenkins user
+USER jenkins
