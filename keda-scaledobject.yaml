@@ -1,0 +1,19 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: myname-agent-scaler
+  namespace: jenkins
+spec:
+  scaleTargetRef:
+    name: myname-agent-deployment
+  pollingInterval: 30
+  cooldownPeriod: 300
+  minReplicaCount: 0
+  maxReplicaCount: 5
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus.jenkins.svc.cluster.local
+      metricName: jenkins_queue_size
+      threshold: '1'
+      query: avg_over_time(jenkins_queue_size[1m])
