@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myname-agent-deployment
+  namespace: jenkins
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: jenkins-agent
+  template:
+    metadata:
+      labels:
+        app: jenkins-agent
+    spec:
+      containers:
+      - name: jenkins-agent
+        image: myname/jenkins-agent:latest
+        env:
+        - name: JENKINS_URL
+          value: "http://jenkins-service:8080"
+        - name: JENKINS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: myname-agent-secret
+              key: secret
+        - name: JENKINS_AGENT_NAME
+          value: "k8s-agent"
